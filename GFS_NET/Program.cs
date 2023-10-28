@@ -1,70 +1,82 @@
-﻿using GFS_NET.Helpers;
-using GFS_NET.Interfaces;
+﻿using GFS_NET.Interfaces;
 using GFS_NET.Objects;
-using GFS_NET.Scraper;
+using GFS_NET.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Hosting;
 
-static void GetAppSettings(IConfiguration config)
-{
-    config.Bind("AppSettings", new AppSettings());
-}
+// Create a new host application builder
+var builder = Host.CreateApplicationBuilder(args);
 
-// Create a service collection
-// Create a service collection
-var serviceProvider = new ServiceCollection()
-    .Configure<AppSettings>(GetAppSettings)
-    .AddSingleton<IAppSettings>(sp => sp.GetRequiredService<IOptions<AppSettings>>().Value)
-    .AddSingleton<SettingsReader>()
-    .BuildServiceProvider();
+// Register the IScraper interface with the ScraperService implementation
+builder.Services.AddScoped<IScraper, ScraperService>();
 
-// Register the configuration
-ConfigurationBuilder configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json")
+// Build a configuration object using environment variables and JSON providers
+IConfiguration config = new ConfigurationBuilder()
+    .AddJsonFile("appSettings.json")
+    .AddJsonFile("chromeSettings.json")
+    .AddJsonFile("googleFlightSettings.json") // Additional settings
+    .AddEnvironmentVariables()
     .Build();
 
-serviceProvider.GetRequiredService<IConfiguration>().Bind(configuration);
+// Bind entire JSON files to IOptions for AppSettings and ChromeSettings
+builder.Services.Configure<AppSettings>(config);
+builder.Services.Configure<ChromeSettings>(config);
 
-// Create the AppSettings instance
-var appSettings = serviceProvider.GetRequiredService<IAppSettings>();
+// Add new interfaces and configuration for GoogleFlight
+builder.Services.AddScoped<IGoogleFlight, GoogleFlightService>();
+builder.Services.Configure<GoogleFlightSettings>(config);
 
+// Check values in appSettings file
+int delta = config.GetValue<int>("Delta");
+int flexdays = config.GetValue<int>("Flexdays");
+DateTime outbound = DateTime.Parse(config.GetSection("Outbound").Value!);
+DateTime lastDate = DateTime.Parse(config.GetSection("LastDate").Value!);
 
-
-//// Read settings.json file
-//SettingsReader settingsReader = new ();
-//AppSettings appSettings = settingsReader.ReadSettings();
-
-//if (appSettings == null)
-//{
-//    throw new Exception("Error reading settings.json file");
-//}
-
-
-try
+// Check integer range inputs
+if (delta <= 0 || flexdays <= 0)
 {
-    GoogleFlightScraper googleFlightScraper = new ();
-    // Declare vars
-    DateTime startTime = DateTime.Now;
-    string outFileCsv = startTime.ToString() + ".csv";
-    Console.WriteLine($"Search start at {startTime}");
-
-    // Start search
-    googleFlightScraper.StartSearch(
-
-        fromAirports: appSettings.Options.From,
-        toAirports: appSettings.Options.To,
-        outbound: appSettings.Options.Outbound,
-        inbound: appSettings.Options.Outbound.AddDays(appSettings.Options.Delta),
-        flexdays: appSettings.Options.Flexdays,
-        lastdate: appSettings.Options.LastDate
-
-    );
-    DateTime endTime = DateTime.Now;
-    Console.WriteLine($"Search end at {endTime}");
+    throw new Exception("Please check for valid range input in appSettings.json");
 }
-catch (Exception ex)
+// Check dates
+if (outbound < DateTime.Now.Date || lastDate <= DateTime.Now.Date || outbound == lastDate)
 {
-    Console.WriteLine("An error occurred: " + ex.Message);
+    throw new Exception("Please check for valid date input in appSettings.json");
 }
+
+// Ask user if want to continue
+Console.WriteLine(Environment.NewLine);
+Console.WriteLine("AVOLOAVOLO.it TRIBUTE" + Environment.NewLine);
+Console.WriteLine("Configure 'appSettings.json' file for scraper parameters" + Environment.NewLine);
+Console.WriteLine("Do you want to continue? (Any key to continue, 'n' to exit)" + Environment.NewLine);
+string userInput = Console.ReadLine();
+if (userInput.ToLower() == "n")
+{
+    Environment.Exit(0);
+}
+
+
+// Build the host
+var host = builder.Build();
+
+using (var scope = host.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        // Get required service
+        var scraper = services.GetRequiredService<IGoogleFlight>();
+
+        // Provide the filename
+        scraper.StartScraperLoop();
+
+        // Quit the driver
+        scraper.StopScraper();
+    }
+    catch (Exception ex)
+    {
+        throw new Exception(ex.Message);
+    }
+    finally { scope.Dispose(); }
+}
+

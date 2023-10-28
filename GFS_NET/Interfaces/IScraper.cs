@@ -2,8 +2,8 @@
 {
     public interface IScraper
     {
-        void SetTimeout(int timeout);
-        // Add other methods for web scraping as needed.
         void Dispose();
+        string? GetElement(string url, string xpath);
+        List<string> GetElementsFromXPathList(string url, List<string> xpathList);
     }
 }

@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\marco\\source\\repos\\GFS_NET\\GFS_NET\\GFS_NET.csproj": {}
+    "C:\\Users\\Marco\\source\\repos\\GFS_NET\\GFS_NET\\GFS_NET.csproj": {}
   },
   "projects": {
-    "C:\\Users\\marco\\source\\repos\\GFS_NET\\GFS_NET\\GFS_NET.csproj": {
+    "C:\\Users\\Marco\\source\\repos\\GFS_NET\\GFS_NET\\GFS_NET.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\marco\\source\\repos\\GFS_NET\\GFS_NET\\GFS_NET.csproj",
+        "projectUniqueName": "C:\\Users\\Marco\\source\\repos\\GFS_NET\\GFS_NET\\GFS_NET.csproj",
         "projectName": "GFS_NET",
-        "projectPath": "C:\\Users\\marco\\source\\repos\\GFS_NET\\GFS_NET\\GFS_NET.csproj",
-        "packagesPath": "C:\\Users\\marco\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\marco\\source\\repos\\GFS_NET\\GFS_NET\\obj\\",
+        "projectPath": "C:\\Users\\Marco\\source\\repos\\GFS_NET\\GFS_NET\\GFS_NET.csproj",
+        "packagesPath": "C:\\Users\\Marco\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Marco\\source\\repos\\GFS_NET\\GFS_NET\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\marco\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Marco\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -45,6 +45,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "CsvHelper": {
+              "target": "Package",
+              "version": "[30.0.1, )"
+            },
             "Microsoft.Extensions.Configuration": {
               "target": "Package",
               "version": "[7.0.0, )"
@@ -52,6 +56,10 @@
             "Microsoft.Extensions.DependencyInjection": {
               "target": "Package",
               "version": "[7.0.0, )"
+            },
+            "Microsoft.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[7.0.1, )"
             },
             "Microsoft.Extensions.Options": {
               "target": "Package",

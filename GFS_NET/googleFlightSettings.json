@@ -1,0 +1,11 @@
+{
+  "BaseUrl": "https://www.google.com/travel/flights?q=Flights+to+{to_}+from+{from_}+on+{outbound_}+through+{inbound_}",
+  "Xpaths": {
+    "AirportCode": "//*[@id=\"yDmH0d\"]/c-wiz[2]/div/div[2]/c-wiz/div[1]/c-wiz/div[2]/div[2]/div[3]/ul/li/div/div[2]/div/div[2]/div[3]/span",
+    "Price": "//*[@id=\"yDmH0d\"]/c-wiz[2]/div/div[2]/c-wiz/div[1]/c-wiz/div[2]/div[2]/div[3]/ul/li/div/div[2]/div/div[2]/div[6]/div[1]/div[2]/span",
+    "Company": "//*[@id=\"yDmH0d\"]/c-wiz[2]/div/div[2]/c-wiz/div[1]/c-wiz/div[2]/div[2]/div[3]/ul/li/div/div[2]/div/div[2]/div[2]/div[2]",
+    "Stops": "//*[@id=\"yDmH0d\"]/c-wiz[2]/div/div[2]/c-wiz/div[1]/c-wiz/div[2]/div[2]/div[3]/ul/li/div/div[2]/div/div[2]/div[4]/div[1]/span",
+    "Duration": "//*[@id=\"yDmH0d\"]/c-wiz[2]/div/div[2]/c-wiz/div[1]/c-wiz/div[2]/div[2]/div[3]/ul/li/div/div[2]/div/div[2]/div[3]/div"
+  }
+}
+
