@@ -398,7 +398,7 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Custom ML
-#/bin/
+/bin/
 /obj/
 
 
