@@ -1,10 +1,9 @@
 {
   "version": 2,
-  "dgSpecHash": "orRdOyRSKE/e43ndCSHZvpkr6TvwqdwK6ZitxsrkM06EJluOppWSJvcKYPqAsymSsF33JHVKdwnIGvksatOb3A==",
+  "dgSpecHash": "U+VKlrSOoH5W6cDS9K19ZMv1xjsHruISxFzgRqNt9OhQBG7wtC3fx3BKvy0Cu5bGV7uDT30w+wDPqq6a6ULmoQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Marco\\source\\repos\\GFS_NET\\GFS_NET\\GFS_NET.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Marco\\.nuget\\packages\\csvhelper\\30.0.1\\csvhelper.30.0.1.nupkg.sha512",
     "C:\\Users\\Marco\\.nuget\\packages\\microsoft.extensions.configuration\\7.0.0\\microsoft.extensions.configuration.7.0.0.nupkg.sha512",
     "C:\\Users\\Marco\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\7.0.0\\microsoft.extensions.configuration.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\Marco\\.nuget\\packages\\microsoft.extensions.configuration.binder\\7.0.3\\microsoft.extensions.configuration.binder.7.0.3.nupkg.sha512",

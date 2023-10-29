@@ -9,6 +9,7 @@ namespace GFS_NET.Services
 {
     public class ScraperService : IScraper
     {
+        Random _rnd = new ();
         private IWebDriver _driver;
         private readonly ChromeSettings _chrOpt;
         private WebDriverWait _wait;
@@ -27,15 +28,26 @@ namespace GFS_NET.Services
             {
                 options.AddArgument(driverOpt);
             }
+            // Randomize User Agent
+            if (_chrOpt.RandomizeUserAgent)
+            {
+                options.AddArgument($"--user-agent={_chrOpt.UserAgents[_rnd.Next(0, _chrOpt.UserAgents.Count)]}");
+            }
+            // Randomize Referer
+            if (_chrOpt.RandomizeReferer)
+            {
+                options.AddArgument($"--referer={_chrOpt.Referers[_rnd.Next(0, _chrOpt.Referers.Count)]}");
+            }
 
-            // New instance of ChromeDriver with options from settings file
-            _driver = new ChromeDriver(ChromeDriverService.CreateDefaultService(options));
+            // New instance of ChromeDriver with options
+            _driver = new ChromeDriver(options);
+            //_driver = new ChromeDriver(ChromeDriverService.CreateDefaultService(options));
 
             // Set the wait time
             _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(_chrOpt.Timeout));
 
             // Open url and accept cookie policy
-            AcceptCookiePolicy("https://www.google.com");
+            AcceptCookiePolicy(_chrOpt.GoogleBaseUrl, _chrOpt.AcceptCookieBtn);
         }
 
         public void Dispose()
@@ -67,10 +79,7 @@ namespace GFS_NET.Services
                     return element.Text;
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An exception occurred: " + ex.Message);
-            }
+            catch (Exception ex) { Console.WriteLine("An exception occurred: " + ex.Message); }
 
             return null;
         }
@@ -92,11 +101,7 @@ namespace GFS_NET.Services
                         {
                             return drv.FindElement(By.XPath(xpath.ToString()));
                         }
-                        catch (NoSuchElementException)
-                        {
-                            //Console.WriteLine($"Not such element with Xpath: {xpath}");
-                            return null;
-                        }
+                        catch (NoSuchElementException) { return null; }
                     });
 
                     if (element != null)
@@ -105,21 +110,18 @@ namespace GFS_NET.Services
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An exception occurred: " + ex.Message);
-            }
+            catch (Exception ex) { Console.WriteLine("An exception occurred: " + ex.Message); }
 
             return elementTextList;
         }
 
-        private void AcceptCookiePolicy(string url)
+        private void AcceptCookiePolicy(string url, string btnXpath)
         {
             // Go to url
             _driver.Navigate().GoToUrl(url);
 
             // Search element for xpath "AcceptCookieBtn"
-            By elementLocator = By.XPath(_chrOpt.AcceptCookieBtn); 
+            By elementLocator = By.XPath(btnXpath); 
             var element = _wait.Until(drv =>
             {
                 try
@@ -127,11 +129,7 @@ namespace GFS_NET.Services
                     drv.FindElement(elementLocator).Click(); // Click element
                     return true; 
                 }
-                catch (NoSuchElementException)
-                {
-                    // Element is not found
-                    return false; 
-                }
+                catch (NoSuchElementException) { return false; }
             });
         }
     }

@@ -33,12 +33,13 @@ int flexdays = config.GetValue<int>("Flexdays");
 DateTime outbound = DateTime.Parse(config.GetSection("Outbound").Value!);
 DateTime lastDate = DateTime.Parse(config.GetSection("LastDate").Value!);
 
-// Check integer range inputs
+// Check for valid integer range inputs
 if (delta <= 0 || flexdays <= 0)
 {
     throw new Exception("Please check for valid range input in appSettings.json");
 }
-// Check dates
+
+// Check for valid dates
 if (outbound < DateTime.Now.Date || lastDate <= DateTime.Now.Date || outbound == lastDate)
 {
     throw new Exception("Please check for valid date input in appSettings.json");
@@ -47,18 +48,22 @@ if (outbound < DateTime.Now.Date || lastDate <= DateTime.Now.Date || outbound ==
 // Ask user if want to continue
 Console.WriteLine(Environment.NewLine);
 Console.WriteLine("AVOLOAVOLO.it TRIBUTE" + Environment.NewLine);
-Console.WriteLine("Configure 'appSettings.json' file for scraper parameters" + Environment.NewLine);
+Console.WriteLine("Configure scraper parameters in 'appSettings.json' file." + Environment.NewLine);
 Console.WriteLine("Do you want to continue? (Any key to continue, 'n' to exit)" + Environment.NewLine);
-string userInput = Console.ReadLine();
-if (userInput.ToLower() == "n")
-{
-    Environment.Exit(0);
-}
+
+//string userInput = Console.ReadLine();
+
+//if (userInput.ToLower() == "n")
+//{
+//    Environment.Exit(0);
+//}
+
 
 
 // Build the host
 var host = builder.Build();
 
+// Crate the scope
 using (var scope = host.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -73,10 +78,8 @@ using (var scope = host.Services.CreateScope())
         // Quit the driver
         scraper.StopScraper();
     }
-    catch (Exception ex)
-    {
-        throw new Exception(ex.Message);
-    }
+    catch (Exception ex) { throw new Exception(ex.Message); }
+
     finally { scope.Dispose(); }
 }
 

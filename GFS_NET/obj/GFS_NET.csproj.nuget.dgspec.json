@@ -45,10 +45,6 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "CsvHelper": {
-              "target": "Package",
-              "version": "[30.0.1, )"
-            },
             "Microsoft.Extensions.Configuration": {
               "target": "Package",
               "version": "[7.0.0, )"

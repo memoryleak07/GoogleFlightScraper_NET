@@ -1,5 +1,6 @@
 {
   "Timeout": 10,
+  "GoogleBaseUrl": "https://www.google.com",
   "AcceptCookieBtn": "//*[@id=\"L2AGLb\"]/div",
   "DriverOptions": [
     "--log-level=3",

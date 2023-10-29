@@ -9,7 +9,6 @@ C:\Users\Marco\source\repos\GFS_NET\GFS_NET\bin\Debug\net8.0\GFS_NET.deps.json
 C:\Users\Marco\source\repos\GFS_NET\GFS_NET\bin\Debug\net8.0\GFS_NET.runtimeconfig.json
 C:\Users\Marco\source\repos\GFS_NET\GFS_NET\bin\Debug\net8.0\GFS_NET.dll
 C:\Users\Marco\source\repos\GFS_NET\GFS_NET\bin\Debug\net8.0\GFS_NET.pdb
-C:\Users\Marco\source\repos\GFS_NET\GFS_NET\bin\Debug\net8.0\CsvHelper.dll
 C:\Users\Marco\source\repos\GFS_NET\GFS_NET\bin\Debug\net8.0\Microsoft.Extensions.Configuration.dll
 C:\Users\Marco\source\repos\GFS_NET\GFS_NET\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Abstractions.dll
 C:\Users\Marco\source\repos\GFS_NET\GFS_NET\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Binder.dll
@@ -56,3 +55,4 @@ C:\Users\Marco\source\repos\GFS_NET\GFS_NET\obj\Debug\net8.0\refint\GFS_NET.dll
 C:\Users\Marco\source\repos\GFS_NET\GFS_NET\obj\Debug\net8.0\GFS_NET.pdb
 C:\Users\Marco\source\repos\GFS_NET\GFS_NET\obj\Debug\net8.0\GFS_NET.genruntimeconfig.cache
 C:\Users\Marco\source\repos\GFS_NET\GFS_NET\obj\Debug\net8.0\ref\GFS_NET.dll
+C:\Users\Marco\source\repos\GFS_NET\GFS_NET\bin\Debug\net8.0\.gitignore

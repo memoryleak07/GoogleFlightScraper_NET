@@ -18,9 +18,12 @@
         {
             // Create a single string by joining the list of strings with a delimiter
             string line = string.Join(",", resultList);
-
-            // Append the line to the CSV file with a newline character
-            File.AppendAllText(outFileNameCsv, line + Environment.NewLine);
+            try
+            {
+                // Append the line to the CSV file with a newline character
+                File.AppendAllText(outFileNameCsv, line + Environment.NewLine);
+            }
+            catch (Exception ex) { throw new Exception(ex.Message); }
         }
     }
 }
