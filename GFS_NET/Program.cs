@@ -28,13 +28,13 @@ builder.Services.AddScoped<IGoogleFlight, GoogleFlightService>();
 builder.Services.Configure<GoogleFlightSettings>(config);
 
 // Check values in appSettings file
-int delta = config.GetValue<int>("Delta");
-int flexdays = config.GetValue<int>("Flexdays");
-DateTime outbound = DateTime.Parse(config.GetSection("Outbound").Value!);
-DateTime lastDate = DateTime.Parse(config.GetSection("LastDate").Value!);
+int delta = config.GetValue<int>("HowManyDays");
+int flexDays = config.GetValue<int>("FlexDays");
+DateTime outbound = DateTime.Parse(config.GetSection("FirstDepartureDate").Value!);
+DateTime lastDate = DateTime.Parse(config.GetSection("LastDepartureDate").Value!);
 
 // Check for valid integer range inputs
-if (delta <= 0 || flexdays <= 0)
+if (delta <= 0 || flexDays <= 0)
 {
     throw new Exception("Please check for valid range input in appSettings.json");
 }
@@ -51,12 +51,12 @@ Console.WriteLine("AVOLOAVOLO.it TRIBUTE" + Environment.NewLine);
 Console.WriteLine("Configure scraper parameters in 'appSettings.json' file." + Environment.NewLine);
 Console.WriteLine("Do you want to continue? (Any key to continue, 'n' to exit)" + Environment.NewLine);
 
-//string userInput = Console.ReadLine();
+string userInput = Console.ReadLine();
 
-//if (userInput.ToLower() == "n")
-//{
-//    Environment.Exit(0);
-//}
+if (userInput.ToLower() == "n")
+{
+    Environment.Exit(0);
+}
 
 
 

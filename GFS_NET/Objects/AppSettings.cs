@@ -4,10 +4,10 @@
     {
         public required List<string> FromAirports { get; set; }
         public required List<string> ToAirports { get; set; }
-        public required DateTime Outbound { get; set; }
-        public required int Delta { get; set; }
-        public required int Flexdays { get; set; }
-        public required bool Weekend { get; set; }
-        public required DateTime LastDate { get; set; }
+        public required DateTime FirstDepartureDate { get; set; }
+        public required DateTime LastDepartureDate { get; set; }
+        public required int HowManyDays { get; set; }
+        public required int FlexDays { get; set; }
+        public required bool OnlyWeekend { get; set; }
     }
 }

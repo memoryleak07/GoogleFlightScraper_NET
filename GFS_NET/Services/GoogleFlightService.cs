@@ -28,12 +28,15 @@ namespace GFS_NET.Services
         public void StartScraperLoop()
         {
             // Get options
-            DateTime outbound = _opt.Outbound;
-            DateTime lastdate = _opt.LastDate;
+            DateTime outbound = _opt.FirstDepartureDate;
+            DateTime lastdate = _opt.LastDepartureDate;
             TimeSpan period = lastdate - outbound;
 
             Console.WriteLine($"Writing results in: {_outFile}");
             Console.WriteLine("ScraperLoop start at: " + DateTime.Now.ToString());
+
+            // Weekend inex
+            int iWeekend = 0;
 
             foreach (string fromAirport in _opt.FromAirports)
             {
@@ -43,10 +46,15 @@ namespace GFS_NET.Services
                     {
                         // Update dates
                         DateTime newOutbound = outbound.AddDays(i);
-                        DateTime inbound = newOutbound.AddDays(_opt.Delta);
+                        DateTime inbound = newOutbound.AddDays(_opt.HowManyDays);
 
-                        Console.WriteLine(DateTimeExtensions.FirstDayOfWeekend(newOutbound));
-
+                        if (_opt.OnlyWeekend)
+                        {
+                            if (i == 0) { iWeekend = 0; }
+                            newOutbound = DateTimeExtensions.NextWeekendDay(newOutbound.AddDays(iWeekend));
+                            inbound = newOutbound.AddDays(_opt.HowManyDays);
+                            iWeekend += 5;
+                        }
 
                         // Check if outbound equal to LastDate break loop
                         if (lastdate.Date == newOutbound.Date)
@@ -63,17 +71,17 @@ namespace GFS_NET.Services
                         );
 
                         // Iterate over flex days
-                        if (_opt.Flexdays > 0)
+                        if (_opt.FlexDays > 0)
                         {
-                            for (int j = 0; j < _opt.Flexdays; j++)
+                            for (int j = 0; j < _opt.FlexDays; j++)
                             {
                                 // Update dates
-                                DateTime newInboundDate = outbound.AddDays(j + 1 + _opt.Delta);
+                                DateTime newInboundDate = newOutbound.AddDays(j + 1 + _opt.HowManyDays);
                                 // Scrape from inputs 
                                 ScrapeFromInputs(
                                     fromAirport,
                                     toAirport,
-                                    outbound.ToString("yyyy-MM-dd"),
+                                    newOutbound.ToString("yyyy-MM-dd"),
                                     newInboundDate.ToString("yyyy-MM-dd")
                                 );
 

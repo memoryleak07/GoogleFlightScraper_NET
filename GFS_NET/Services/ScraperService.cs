@@ -14,7 +14,6 @@ namespace GFS_NET.Services
         private readonly ChromeSettings _chrOpt;
         private WebDriverWait _wait;
 
-
         public ScraperService(IOptions<ChromeSettings> chromeOption)
         {
             // Get chrome options from settings file
@@ -83,7 +82,6 @@ namespace GFS_NET.Services
 
             return null;
         }
-
 
         public List<string> GetElementsFromXPathList(string url, List<string> xpathList)
         {
