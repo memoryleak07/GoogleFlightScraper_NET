@@ -400,6 +400,6 @@ FodyWeavers.xsd
 # Custom ML
 /bin/
 /obj/
-
-
+/.vs/
+.suo
 
