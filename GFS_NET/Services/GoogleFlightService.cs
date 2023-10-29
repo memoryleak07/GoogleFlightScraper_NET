@@ -32,6 +32,7 @@ namespace GFS_NET.Services
             DateTime lastdate = _opt.LastDate;
             TimeSpan period = lastdate - outbound;
 
+            Console.WriteLine($"Writing results in: {_outFile}");
             Console.WriteLine("ScraperLoop start at: " + DateTime.Now.ToString());
 
             foreach (string fromAirport in _opt.FromAirports)
@@ -42,42 +43,43 @@ namespace GFS_NET.Services
                     {
                         // Update dates
                         DateTime newOutbound = outbound.AddDays(i);
-                        // Get return flight date (outbound + delta)
                         DateTime inbound = newOutbound.AddDays(_opt.Delta);
+
+                        Console.WriteLine(DateTimeExtensions.FirstDayOfWeekend(newOutbound));
+
 
                         // Check if outbound equal to LastDate break loop
                         if (lastdate.Date == newOutbound.Date)
                         {
-                            Console.WriteLine("Break loop! LastDate is equal to Outbound");
+                            Console.WriteLine("Break loop! LastDate is equal to Outbound.");
                             break;
                         }
-                        // Dates strings to my scraper
-                        string outboundDate = newOutbound.ToString("yyyy-MM-dd");
-                        string inboundDate = inbound.ToString("yyyy-MM-dd");
-
                         // Scrape from inputs 
                         ScrapeFromInputs(
                             fromAirport,
                             toAirport,
-                            outboundDate,
-                            inboundDate
+                            newOutbound.ToString("yyyy-MM-dd"),
+                            inbound.ToString("yyyy-MM-dd")
                         );
-                    }
-                    //// Iterate over flex days
-                    //if (_opt.Flexdays > 0)
-                    //{
-                    //    for (int j = 0; j < _opt.Flexdays; j++)
-                    //    {
-                    //        inboundDate = newOutbound.AddDays(j + 1 + _opt.Delta).ToString("yyyy-MM-dd");
-                    //        ScrapeFromInputs(
-                    //            fromAirport,
-                    //            toAirport,
-                    //            outboundDate,
-                    //            inboundDate
-                    //        );
 
-                    //    }
-                    //}
+                        // Iterate over flex days
+                        if (_opt.Flexdays > 0)
+                        {
+                            for (int j = 0; j < _opt.Flexdays; j++)
+                            {
+                                // Update dates
+                                DateTime newInboundDate = outbound.AddDays(j + 1 + _opt.Delta);
+                                // Scrape from inputs 
+                                ScrapeFromInputs(
+                                    fromAirport,
+                                    toAirport,
+                                    outbound.ToString("yyyy-MM-dd"),
+                                    newInboundDate.ToString("yyyy-MM-dd")
+                                );
+
+                            }
+                        }
+                    }
                 }
             }
             Console.WriteLine("ScraperLoop end at: " + DateTime.Now.ToString());
@@ -95,7 +97,7 @@ namespace GFS_NET.Services
                 results.InsertRange(0, new List<string> { outbound, inbound });
 
                 // Print results (results is a List<string>)
-                Console.WriteLine(string.Join(" ", results));
+                Console.WriteLine(string.Join(" | ", results));
 
                 // Add newResult to CSV file
                 CustomHelpers.AddListToCsvFile(results, _outFile);
