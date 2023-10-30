@@ -1,4 +1,5 @@
-﻿using GFS_NET.Interfaces;
+﻿global using Serilog;
+using GFS_NET.Interfaces;
 using GFS_NET.Objects;
 using GFS_NET.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +8,13 @@ using Microsoft.Extensions.Hosting;
 
 // Create a new host application builder
 var builder = Host.CreateApplicationBuilder(args);
+
+// Serilog 
+builder.Services.AddSingleton<ILogger>(new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File($"{DateTime.Now:yyyyMMddHHmmss}.log")
+    .CreateLogger()
+);
 
 // Register the IScraper interface with the ScraperService implementation
 builder.Services.AddScoped<IScraper, ScraperService>();
@@ -34,7 +42,7 @@ DateTime outbound = DateTime.Parse(config.GetSection("FirstDepartureDate").Value
 DateTime lastDate = DateTime.Parse(config.GetSection("LastDepartureDate").Value!);
 
 // Check for valid integer range inputs
-if (delta <= 0 || flexDays <= 0)
+if (delta <= 0 || flexDays < 0)
 {
     throw new Exception("Please check for valid range input in appSettings.json");
 }
@@ -51,14 +59,12 @@ Console.WriteLine("AVOLOAVOLO.it TRIBUTE" + Environment.NewLine);
 Console.WriteLine("Configure scraper parameters in 'appSettings.json' file." + Environment.NewLine);
 Console.WriteLine("Do you want to continue? (Any key to continue, 'n' to exit)" + Environment.NewLine);
 
-string userInput = Console.ReadLine();
+string userInput = Console.ReadLine()!;
 
 if (userInput.ToLower() == "n")
 {
     Environment.Exit(0);
 }
-
-
 
 // Build the host
 var host = builder.Build();

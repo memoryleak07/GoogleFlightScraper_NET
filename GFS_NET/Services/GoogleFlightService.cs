@@ -8,12 +8,14 @@ namespace GFS_NET.Services
     public class GoogleFlightService : IGoogleFlight
     {
         private string _outFile;
+        private readonly ILogger _log;
         private readonly IScraper _scraper;
         private readonly AppSettings _opt;
         private readonly GoogleFlightSettings _googleOpt;
 
-        public GoogleFlightService(IScraper scraper, IOptions<AppSettings> appSettings, IOptions<GoogleFlightSettings> googleOpt)
+        public GoogleFlightService(IScraper scraper, IOptions<AppSettings> appSettings, IOptions<GoogleFlightSettings> googleOpt, ILogger logger)
         {
+            _log = logger;
             _scraper = scraper;
             _opt = appSettings.Value;
             _googleOpt = googleOpt.Value;
@@ -32,8 +34,8 @@ namespace GFS_NET.Services
             DateTime lastdate = _opt.LastDepartureDate;
             TimeSpan period = lastdate - outbound;
 
-            Console.WriteLine($"Writing results in: {_outFile}");
-            Console.WriteLine("ScraperLoop start at: " + DateTime.Now.ToString());
+            _log.Information($"Writing results in: {_outFile}");
+            _log.Information("ScraperLoop start");
 
             // Weekend inex
             int iWeekend = 0;
@@ -46,20 +48,20 @@ namespace GFS_NET.Services
                     {
                         // Update dates
                         DateTime newOutbound = outbound.AddDays(i);
-                        DateTime inbound = newOutbound.AddDays(_opt.HowManyDays);
+                        DateTime newInbound = newOutbound.AddDays(_opt.HowManyDays);
 
                         if (_opt.OnlyWeekend)
                         {
                             if (i == 0) { iWeekend = 0; }
                             newOutbound = DateTimeExtensions.NextWeekendDay(newOutbound.AddDays(iWeekend));
-                            inbound = newOutbound.AddDays(_opt.HowManyDays);
+                            newInbound = newOutbound.AddDays(_opt.HowManyDays);
                             iWeekend += 5;
                         }
 
                         // Check if outbound equal to LastDate break loop
                         if (lastdate.Date == newOutbound.Date)
                         {
-                            Console.WriteLine("Break loop! LastDate is equal to Outbound.");
+                            _log.Information("Break loop! LastDate is equal to Outbound.");
                             break;
                         }
                         // Scrape from inputs 
@@ -67,7 +69,7 @@ namespace GFS_NET.Services
                             fromAirport,
                             toAirport,
                             newOutbound.ToString("yyyy-MM-dd"),
-                            inbound.ToString("yyyy-MM-dd")
+                            newInbound.ToString("yyyy-MM-dd")
                         );
 
                         // Iterate over flex days
@@ -76,13 +78,13 @@ namespace GFS_NET.Services
                             for (int j = 0; j < _opt.FlexDays; j++)
                             {
                                 // Update dates
-                                DateTime newInboundDate = newOutbound.AddDays(j + 1 + _opt.HowManyDays);
+                                newInbound = newOutbound.AddDays(j + 1 + _opt.HowManyDays);
                                 // Scrape from inputs 
                                 ScrapeFromInputs(
                                     fromAirport,
                                     toAirport,
                                     newOutbound.ToString("yyyy-MM-dd"),
-                                    newInboundDate.ToString("yyyy-MM-dd")
+                                    newInbound.ToString("yyyy-MM-dd")
                                 );
 
                             }
@@ -90,7 +92,7 @@ namespace GFS_NET.Services
                     }
                 }
             }
-            Console.WriteLine("ScraperLoop end at: " + DateTime.Now.ToString());
+            _log.Information("ScraperLoop end");
         }
 
         public void ScrapeFromInputs(string fromAirport, string toAirport, string outbound, string inbound)
@@ -105,7 +107,7 @@ namespace GFS_NET.Services
                 results.InsertRange(0, new List<string> { outbound, inbound });
 
                 // Print results (results is a List<string>)
-                Console.WriteLine(string.Join(" | ", results));
+                _log.Information(string.Join(" | ", results));
 
                 // Add newResult to CSV file
                 CustomHelpers.AddListToCsvFile(results, _outFile);

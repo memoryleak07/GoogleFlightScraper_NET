@@ -10,12 +10,15 @@ namespace GFS_NET.Services
     public class ScraperService : IScraper
     {
         Random _rnd = new ();
-        private IWebDriver _driver;
+        private readonly ILogger _log;
+        private readonly IWebDriver _driver;
         private readonly ChromeSettings _chrOpt;
-        private WebDriverWait _wait;
+        private readonly WebDriverWait _wait;
 
-        public ScraperService(IOptions<ChromeSettings> chromeOption)
+        public ScraperService(IOptions<ChromeSettings> chromeOption, ILogger logger)
         {
+            _log = logger;
+
             // Get chrome options from settings file
             _chrOpt = chromeOption.Value;
 
@@ -78,7 +81,7 @@ namespace GFS_NET.Services
                     return element.Text;
                 }
             }
-            catch (Exception ex) { Console.WriteLine("An exception occurred: " + ex.Message); }
+            catch (Exception ex) { _log.Error("An exception occurred: " + ex.Message); }
 
             return null;
         }
@@ -108,7 +111,7 @@ namespace GFS_NET.Services
                     }
                 }
             }
-            catch (Exception ex) { Console.WriteLine("An exception occurred: " + ex.Message); }
+            catch (Exception ex) { _log.Error("An exception occurred: " + ex.Message); }
 
             return elementTextList;
         }
@@ -125,6 +128,7 @@ namespace GFS_NET.Services
                 try
                 {
                     drv.FindElement(elementLocator).Click(); // Click element
+                    _log.Information("Cookie Policy successfully accepted.");
                     return true; 
                 }
                 catch (NoSuchElementException) { return false; }
