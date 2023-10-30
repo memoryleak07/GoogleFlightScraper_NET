@@ -2,8 +2,8 @@
 using GFS_NET.Interfaces;
 using GFS_NET.Objects;
 using GFS_NET.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 // Create a new host application builder

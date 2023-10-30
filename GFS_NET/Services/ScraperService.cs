@@ -9,7 +9,7 @@ namespace GFS_NET.Services
 {
     public class ScraperService : IScraper
     {
-        Random _rnd = new ();
+        Random _rnd = new();
         private readonly ILogger _log;
         private readonly IWebDriver _driver;
         private readonly ChromeSettings _chrOpt;
@@ -122,14 +122,14 @@ namespace GFS_NET.Services
             _driver.Navigate().GoToUrl(url);
 
             // Search element for xpath "AcceptCookieBtn"
-            By elementLocator = By.XPath(btnXpath); 
+            By elementLocator = By.XPath(btnXpath);
             var element = _wait.Until(drv =>
             {
                 try
                 {
                     drv.FindElement(elementLocator).Click(); // Click element
                     _log.Information("Cookie Policy successfully accepted.");
-                    return true; 
+                    return true;
                 }
                 catch (NoSuchElementException) { return false; }
             });
