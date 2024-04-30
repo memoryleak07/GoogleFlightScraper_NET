@@ -87,7 +87,7 @@ namespace GFS_NET.Services
 
                     if (element == null)
                     {
-                        _logger.Debug($"Can't find any element for xpath {kvp.Key}, continue...");
+                        _logger.Warning($"Can't find any element for xpath {kvp.Key}, continue...");
                         continue;
                     }
 

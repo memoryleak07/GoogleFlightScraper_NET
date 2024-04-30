@@ -36,10 +36,13 @@ bool onlyWeekend = config.GetValue<bool>("OnlyWeekend");
 List<string> fromAirports = config.GetSection("FromAirports").Get<List<string>>()!;
 List<string> toAirports = config.GetSection("ToAirports").Get<List<string>>()!;
 if (howManyDays <= 0 || flexDays < 0)
-    throw new Exception("Please check for valid range input in appSettings.json");
-
+{
+    throw new Exception("Please check for valid range input in appSettings.json (HowManyDays, FlexDays)");
+}
 if (outbound < DateTime.Now.Date || lastDate <= DateTime.Now.Date || outbound == lastDate)
-    throw new Exception("Please check for valid date input in appSettings.json");
+{
+    throw new Exception("Please check for valid date input in appSettings.json (FirstDepartureDate, LastDepartureDate)");
+}
 
 //// Ask user if want to continue
 //Console.WriteLine(Environment.NewLine);
