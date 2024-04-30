@@ -10,46 +10,52 @@ namespace GFS_NET.Services
     public class ScraperService : IScraper
     {
         Random _rnd = new();
-        private readonly ILogger _log;
+        private readonly ILogger _logger;
         private readonly IWebDriver _driver;
         private readonly ChromeSettings _chrOpt;
-        private readonly WebDriverWait _wait;
+        private readonly WebDriverWait _waitTime;
 
         public ScraperService(IOptions<ChromeSettings> chromeOption, ILogger logger)
         {
-            _log = logger;
-
-            // Get chrome options from settings file
+            _logger = logger;
             _chrOpt = chromeOption.Value;
 
             // Init ChromeOptions instance
-            ChromeOptions options = new ChromeOptions();
-
-            // Add argument to chrome driver
+            ChromeOptions options = new();
             foreach (string driverOpt in _chrOpt.DriverOptions)
             {
                 options.AddArgument(driverOpt);
             }
-            // Randomize User Agent
             if (_chrOpt.RandomizeUserAgent)
             {
                 options.AddArgument($"--user-agent={_chrOpt.UserAgents[_rnd.Next(0, _chrOpt.UserAgents.Count)]}");
             }
-            // Randomize Referer
             if (_chrOpt.RandomizeReferer)
             {
                 options.AddArgument($"--referer={_chrOpt.Referers[_rnd.Next(0, _chrOpt.Referers.Count)]}");
             }
 
-            // New instance of ChromeDriver with options
             _driver = new ChromeDriver(options);
-            //_driver = new ChromeDriver(ChromeDriverService.CreateDefaultService(options));
 
-            // Set the wait time
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(_chrOpt.Timeout));
+            _waitTime = new WebDriverWait(_driver, TimeSpan.FromSeconds(_chrOpt.Timeout));
 
-            // Open url and accept cookie policy
             AcceptCookiePolicy(_chrOpt.GoogleBaseUrl, _chrOpt.AcceptCookieBtn);
+        }
+
+        private void AcceptCookiePolicy(string url, string btnXpath)
+        {
+            _driver.Navigate().GoToUrl(url);
+            By elementLocator = By.XPath(btnXpath);
+            var element = _waitTime.Until(drv =>
+            {
+                try
+                {
+                    drv.FindElement(elementLocator).Click();
+                    _logger.Information("Cookie Policy successfully accepted.");
+                    return true;
+                }
+                catch (NoSuchElementException) { return false; }
+            });
         }
 
         public void Dispose()
@@ -58,81 +64,42 @@ namespace GFS_NET.Services
             _driver.Dispose();
         }
 
-        public string? GetElement(string url, string xpath)
+        public List<string> GetElementsFromXpathDict(string url, Dictionary<string, string> xpaths)
         {
-            if (!string.IsNullOrEmpty(url)) { _driver.Navigate().GoToUrl(url); }
-
+            List<string> elementTextList = [];
             try
             {
-                var element = _wait.Until(d =>
+                if (!string.IsNullOrEmpty(url)) _driver.Navigate().GoToUrl(url);
+
+                foreach (var kvp in xpaths)
                 {
-                    try
-                    {
-                        return d.FindElement(By.XPath(xpath));
-                    }
-                    catch (NoSuchElementException)
-                    {
-                        return null;
-                    }
-                });
-
-                if (element != null)
-                {
-                    return element.Text;
-                }
-            }
-            catch (Exception ex) { _log.Error("An exception occurred: " + ex.Message); }
-
-            return null;
-        }
-
-        public List<string> GetElementsFromXPathList(string url, List<string> xpathList)
-        {
-            List<string> elementTextList = new();
-
-            if (!string.IsNullOrEmpty(url)) { _driver.Navigate().GoToUrl(url); }
-
-            try
-            {
-                foreach (string xpath in xpathList)
-                {
-                    var element = _wait.Until(drv =>
+                    var element = _waitTime.Until(drv =>
                     {
                         try
                         {
-                            return drv.FindElement(By.XPath(xpath.ToString()));
+                            return drv.FindElement(By.XPath(kvp.Value));
                         }
-                        catch (NoSuchElementException) { return null; }
+                        catch (NoSuchElementException) 
+                        {
+                            return null; 
+                        }
                     });
 
-                    if (element != null)
+                    if (element == null)
                     {
-                        elementTextList.Add(element.Text);
+                        _logger.Debug($"Can't find any element for xpath {kvp.Key}, continue...");
+                        continue;
                     }
+
+                    elementTextList.Add(element.Text);
                 }
             }
-            catch (Exception ex) { _log.Error("An exception occurred: " + ex.Message); }
+            catch (Exception ex) 
+            { 
+                _logger.Error("An exception occurred: " + ex.Message); 
+            }
 
             return elementTextList;
-        }
-
-        private void AcceptCookiePolicy(string url, string btnXpath)
-        {
-            // Go to url
-            _driver.Navigate().GoToUrl(url);
-
-            // Search element for xpath "AcceptCookieBtn"
-            By elementLocator = By.XPath(btnXpath);
-            var element = _wait.Until(drv =>
-            {
-                try
-                {
-                    drv.FindElement(elementLocator).Click(); // Click element
-                    _log.Information("Cookie Policy successfully accepted.");
-                    return true;
-                }
-                catch (NoSuchElementException) { return false; }
-            });
         }
     }
 }

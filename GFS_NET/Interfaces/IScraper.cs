@@ -3,7 +3,6 @@
     public interface IScraper
     {
         void Dispose();
-        string? GetElement(string url, string xpath);
-        List<string> GetElementsFromXPathList(string url, List<string> xpathList);
+        List<string> GetElementsFromXpathDict(string url, Dictionary<string, string> xpaths);
     }
 }

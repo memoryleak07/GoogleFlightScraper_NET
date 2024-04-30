@@ -1,11 +1,13 @@
-﻿namespace GFS_NET.Helpers
+﻿using System.Globalization;
+
+namespace GFS_NET.Helpers
 {
     public static partial class DateTimeExtensions
     {
+        private readonly static CultureInfo DefaultCulture = CultureInfo.InvariantCulture;
         public static DateTime FirstDayOfWeek(this DateTime dt)
         {
-            var culture = Thread.CurrentThread.CurrentCulture;
-            var diff = dt.DayOfWeek - culture.DateTimeFormat.FirstDayOfWeek;
+            var diff = dt.DayOfWeek - DefaultCulture.DateTimeFormat.FirstDayOfWeek;
 
             if (diff < 0)
             {
@@ -15,22 +17,9 @@
             return dt.AddDays(-diff).Date;
         }
 
-        public static DateTime NextWeekendDay(DateTime dt) =>
-            dt.FirstDayOfWeek().AddDays(5);
-
-        //public static DateTime LastDayOfWeek(this DateTime dt) =>
-        //    dt.FirstDayOfWeek().AddDays(6);
-
-        //public static DateTime FirstDayOfMonth(this DateTime dt) =>
-        //    new DateTime(dt.Year, dt.Month, 1);
-
-        //public static DateTime LastDayOfMonth(this DateTime dt) =>
-        //    dt.FirstDayOfMonth().AddMonths(1).AddDays(-1);
-
-        //public static DateTime FirstDayOfNextMonth(this DateTime dt) =>
-        //    dt.FirstDayOfMonth().AddMonths(1);
-
-        //public static DateTime FirstDayOfWeekend(this DateTime dt) =>
-        //    dt.FirstDayOfWeek().AddDays(5);
+        public static DateTime NextWeekendDay(DateTime dt)
+        {
+            return dt.FirstDayOfWeek().AddDays(5);
+        }
     }
 }

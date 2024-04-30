@@ -403,3 +403,4 @@ FodyWeavers.xsd
 /.vs/
 .suo
 
+/GFS_NET/Properties/launchSettings.json

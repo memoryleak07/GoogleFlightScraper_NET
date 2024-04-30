@@ -10,15 +10,15 @@
             public required string Stops { get; set; }
             public required string Duration { get; set; }
 
-            public List<string> ToList()
+            public Dictionary<string, string> ToDictionary()
             {
-                return new List<string>
+                return new Dictionary<string, string>
                 {
-                    AirportCode,
-                    Price,
-                    Company,
-                    Stops,
-                    Duration,
+                    { nameof(AirportCode), AirportCode },
+                    { nameof(Price), Price },
+                    { nameof(Company), Company },
+                    { nameof(Stops), Stops },
+                    { nameof(Duration), Duration }
                 };
             }
         }
