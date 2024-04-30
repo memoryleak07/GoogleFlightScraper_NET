@@ -35,7 +35,8 @@ namespace GFS_NET.Services
                 options.AddArgument($"--referer={_chrOpt.Referers[_rnd.Next(0, _chrOpt.Referers.Count)]}");
             }
 
-            _driver = new ChromeDriver(options);
+            _driver = new ChromeDriver(options);                         // Windows
+            //_driver = new ChromeDriver("/usr/bin/chromedriver");       // Raspberry
 
             _waitTime = new WebDriverWait(_driver, TimeSpan.FromSeconds(_chrOpt.Timeout));
 

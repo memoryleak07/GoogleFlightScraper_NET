@@ -1,0 +1,76 @@
+﻿{
+  "airports": [
+    "AMS", // Amsterdam Schiphol Airport, Netherlands
+    "ATH", // Athens International Airport, Greece
+    "BCN", // Barcelona-El Prat Airport, Spain
+    "BER", // Berlin Brandenburg Airport, Germany
+    "BUD", // Budapest Ferenc Liszt International Airport, Hungary
+    "CDG", // Paris Charles de Gaulle Airport, France
+    "CPH", // Copenhagen Airport, Denmark
+    "DUB", // Dublin Airport, Ireland
+    "FCO", // Leonardo da Vinci–Fiumicino Airport, Rome, Italy
+    "FRA", // Frankfurt Airport, Germany
+    "GVA", // Geneva Airport, Switzerland
+    "HEL", // Helsinki-Vantaa Airport, Finland
+    "LHR", // London Heathrow Airport, United Kingdom
+    "MAD", // Adolfo Suárez Madrid–Barajas Airport, Spain
+    "MUC", // Munich Airport, Germany
+    "OSL", // Oslo Airport, Gardermoen, Norway
+    "PRG", // Prague Václav Havel Airport, Czech Republic
+    "SVO", // Sheremetyevo International Airport, Moscow, Russia
+    "TXL", // Berlin Tegel Airport, Germany
+    "VIE", // Vienna International Airport, Austria
+    "WAW", // Warsaw Chopin Airport, Poland
+    "ZRH", // Zurich Airport, Switzerland
+    "ALC", // Alicante–Elche Airport, Spain
+    "ARN", // Stockholm Arlanda Airport, Sweden
+    "BCN", // Barcelona–El Prat Airport, Spain
+    "BRU", // Brussels Airport, Belgium
+    "CIA", // Ciampino–G. B. Pastine International Airport, Rome, Italy
+    "CMN", // Mohammed V International Airport, Casablanca, Morocco
+    "CPH", // Copenhagen Airport, Denmark
+    "DUB", // Dublin Airport, Ireland
+    "EDI", // Edinburgh Airport, Scotland, United Kingdom
+    "FCO", // Leonardo da Vinci–Fiumicino Airport, Rome, Italy
+    "GIB", // Gibraltar International Airport, Gibraltar
+    "HAM", // Hamburg Airport, Germany
+    "KRK", // John Paul II International Airport Kraków–Balice, Poland
+    "LIS", // Lisbon Portela Airport, Portugal
+    "LPA", // Gran Canaria Airport, Spain
+    "LYS", // Lyon–Saint-Exupéry Airport, France
+    "MAN", // Manchester Airport, United Kingdom
+    "MLA", // Malta International Airport, Malta
+    "MRS", // Marseille Provence Airport, France
+    "MUC", // Munich Airport, Germany
+    "NCE", // Nice Côte d'Azur Airport, France
+    "OSL", // Oslo Airport, Gardermoen, Norway
+    "PMI", // Palma de Mallorca Airport, Spain
+    "PRG", // Prague Václav Havel Airport, Czech Republic
+    "RIX", // Riga International Airport, Latvia
+    "SXF", // Berlin Schönefeld Airport, Germany
+    "VCE", // Venice Marco Polo Airport, Italy
+    "VIE", // Vienna International Airport, Austria
+    "WAW", // Warsaw Chopin Airport, Poland
+    "ZAG", // Zagreb Franjo Tuđman Airport, Croatia
+    "ZRH", // Zurich Airport, Switzerland
+    "BEG", // Belgrade Nikola Tesla Airport, Serbia
+    "BTS", // Bratislava Airport, Slovakia
+    "BUH", // Henri Coandă International Airport, Bucharest, Romania
+    "KBP", // Boryspil International Airport, Kyiv, Ukraine
+    "KRK", // John Paul II International Airport Kraków–Balice, Poland
+    "OTP", // Henri Coandă International Airport, Bucharest, Romania
+    "PRG", // Prague Václav Havel Airport, Czech Republic
+    "RIX", // Riga International Airport, Latvia
+    "SOF", // Sofia Airport, Bulgaria
+    "TLL", // Tallinn Airport, Estonia
+    "VNO", // Vilnius Airport, Lithuania
+    "WAW", // Warsaw Chopin Airport, Poland
+    "ZAG", // Zagreb Franjo Tuđman Airport, Croatia
+    "AGP", // Málaga Airport, Spain
+    "BSL", // EuroAirport Basel Mulhouse Freiburg, Switzerland/France/Germany
+    "EDI", // Edinburgh Airport, Scotland, United Kingdom
+    "FAO", // Faro Airport, Portugal
+    "LGW", // London Gatwick Airport, United Kingdom
+    "PMI"  // Palma de Mallorca Airport, Spain
+  ]
+}

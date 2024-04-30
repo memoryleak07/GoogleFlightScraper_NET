@@ -44,14 +44,10 @@ if (outbound < DateTime.Now.Date || lastDate <= DateTime.Now.Date || outbound ==
     throw new Exception("Please check for valid date input in appSettings.json (FirstDepartureDate, LastDepartureDate)");
 }
 
-//// Ask user if want to continue
-//Console.WriteLine(Environment.NewLine);
-//Console.WriteLine("AVOLOAVOLO.it TRIBUTE" + Environment.NewLine);
+//Console.WriteLine(Environment.NewLine + "AVOLOAVOLO.it TRIBUTE" + Environment.NewLine);
 //Console.WriteLine("Configure scraper parameters in 'appSettings.json' file." + Environment.NewLine);
 //Console.WriteLine("Do you want to continue? (Any key to continue, 'n' to exit)" + Environment.NewLine);
-
 //string userInput = Console.ReadLine()!;
-
 //if (userInput.ToLower() == "n")
 //{
 //    Environment.Exit(0);
@@ -67,7 +63,7 @@ using (var scope = host.Services.CreateScope())
     {
         var scraper = services.GetRequiredService<IGoogleFlight>();
 
-        scraper.StartScraperLoop(outbound, lastDate, howManyDays, flexDays, onlyWeekend, fromAirports, toAirports, csvFileName);
+        scraper.InitScraper(outbound, lastDate, howManyDays, flexDays, onlyWeekend, fromAirports, toAirports, csvFileName);
 
         scraper.StopScraper();
     }

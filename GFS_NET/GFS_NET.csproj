@@ -25,6 +25,9 @@
     <None Update=".gitignore">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="airportCodes.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="appSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
