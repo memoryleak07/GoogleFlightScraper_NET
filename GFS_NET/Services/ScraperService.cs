@@ -35,20 +35,7 @@ namespace GFS_NET.Services
                 options.AddArgument($"--referer={_chrOpt.Referers[_rnd.Next(0, _chrOpt.Referers.Count)]}");
             }
 
-            // Attempt to attach to an existing session
-            try
-            {
-                _driver = new ChromeDriver(options);
-            }
-            catch (WebDriverException)
-            {
-                // If WebDriverException is thrown, it means no session exists.
-                // In this case, create a new WebDriver instance.
-                _logger.Warning("No existing ChromeDriver session found. Creating a new one.");
-                _driver = new ChromeDriver(options);
-            }
-
-            //_driver = new ChromeDriver(options);                                   // Windows
+            _driver = new ChromeDriver(options);                                     // Windows
             //_driver = new ChromeDriver("/usr/bin/chromedriver", options);          // Raspberry
 
             _waitTime = new WebDriverWait(_driver, TimeSpan.FromSeconds(_chrOpt.Timeout));
