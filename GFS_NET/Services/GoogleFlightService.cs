@@ -21,13 +21,14 @@ namespace GFS_NET.Services
             DateTime outbound, DateTime lastdate, int howManyDays, int flexDays, bool onlyWeekend, List<string> fromAirports, List<string> toAirports, string csvFileName)
         {
             DateTime startTime = DateTime.Now;
-            _logger.Information($"Search start at {startTime}");
+            _logger.Information($"Loop start at {startTime}");
 
             StartScraperLoop(outbound, lastdate, howManyDays, flexDays, onlyWeekend,fromAirports, toAirports, csvFileName);
 
             DateTime endTime = DateTime.Now;
-            _logger.Information($"Search ended at {endTime}. Time elapsed: {endTime - startTime}");
+            _logger.Information($"Loop end at {endTime}. Time elapsed: {endTime - startTime}");
         }
+
 
         private string GoogleFlightUrlBuilder(string from, string to, string outbound, string inbound)
         {
@@ -78,7 +79,7 @@ namespace GFS_NET.Services
                     {
                         if (consecutiveFailures >= 5)
                         {
-                            _logger.Information("Break loop! Too many search with no result.");
+                            _logger.Information($"Break! Too many consecutive search with no result. ({consecutiveFailures})");
                             break;
                         }
 
@@ -95,19 +96,20 @@ namespace GFS_NET.Services
 
                         if (newOutbound.Date >= lastdate.Date)
                         {
-                            _logger.Information("Break loop! The departure date is equal to LastDepartureDate.");
+                            _logger.Information($"Break! The departure date is equal to LastDepartureDate. ({lastdate:yyyy-MM-dd})");
                             break;
                         }
 
                         bool res = ScrapeAndSaveInfo(fromAirport, toAirport, newOutbound, newInbound, csvFileName);
-                        consecutiveFailures = res ? 0 : consecutiveFailures++;
+                        consecutiveFailures = res == true ? 0 : ++consecutiveFailures;
 
                         if (flexDays > 0)
                         {
                             for (int j = 0; j < flexDays; j++)
                             {
                                 newInbound = newOutbound.AddDays(j + 1 + howManyDays);
-                                ScrapeAndSaveInfo(fromAirport, toAirport, newOutbound, newInbound, csvFileName);
+                                bool flexRes = ScrapeAndSaveInfo(fromAirport, toAirport, newOutbound, newInbound, csvFileName);
+                                consecutiveFailures = flexRes == true ? 0 : ++consecutiveFailures;
                             }
                         }
                     }
