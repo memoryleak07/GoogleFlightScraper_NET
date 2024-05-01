@@ -2,6 +2,7 @@
 using GFS_NET.Objects;
 using Microsoft.Data.Analysis;
 using Microsoft.Extensions.Options;
+using System.Globalization;
 
 namespace GFS_NET.Services
 {
@@ -22,19 +23,30 @@ namespace GFS_NET.Services
             var dataPath = Path.GetFullPath(@"test.csv");
 
             // Load the data into the data frame
-            var dataFrame = DataFrame.LoadCsv(dataPath);
+            var dataFrame = DataFrame.LoadCsv(filename: dataPath, cultureInfo: CultureInfo.InvariantCulture);
 
-            // Preview
-            dataFrame.Info();
+            // List of column names
+            var columns = _googleOpt.Value.Xpaths.ToDictionary().Keys.ToList();
 
-            // Summary
-            dataFrame.Description();
+            columns.InsertRange(0, ["Departure", "Return"]);
 
-            string csvFileNameSorted = "sorted_" + csvFileName;
+            // Assign column names to the DataFrame
+            for (int i = 0; i < columns.Count; i++)
+            {
+                dataFrame.Columns[i].SetName(columns[i]);
+            }
 
-            _logger.Debug($"CSV file sorted successfully: {csvFileNameSorted}");
+            // Order by Price
+            dataFrame = dataFrame.OrderBy("Price"); //TODO: for some reason it is added time to date strings. Why? Who asks?
 
-            return csvFileNameSorted;
+            // Save the new data frame to a CSV file
+            var newFilePath = Path.GetFullPath(@"sorted_"+csvFileName);
+
+            DataFrame.SaveCsv(dataFrame, newFilePath, ',');
+
+            _logger.Debug($"CSV file sorted successfully: {newFilePath}");
+
+            return newFilePath;
         }
 
         public void AppendToCsvFile(List<string> results, string outboundDateStr, string inboundDateStr, string csvFileName)

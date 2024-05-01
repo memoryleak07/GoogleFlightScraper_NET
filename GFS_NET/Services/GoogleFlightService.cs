@@ -31,12 +31,14 @@ namespace GFS_NET.Services
             _logger.Information($"Total time elapsed: {endTime - startTime}");
             _logger.Information($"Total search count: {totCount}");
 
-            //if (totCount > 0)
-            //{
-            //    string csvSorted = _csvService.SortCSVFile(csvFileName);
-            //    _logger.Information($"Result file raw: {csvFileName}.");
-            //    _logger.Information($"Result file sorted by price: {csvSorted}.");
-            //}
+            if (totCount > 0)
+            {
+                string csvSorted = _csvService.SortCSVFile(csvFileName);
+                _logger.Information($"Result file raw: {csvFileName}.");
+                _logger.Information($"Result file sorted by price: {csvSorted}.");
+            }
+
+            _logger.Information($"Goodbye, hope it helps.");
         }
 
 
