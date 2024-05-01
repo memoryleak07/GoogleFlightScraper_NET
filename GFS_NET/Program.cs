@@ -26,6 +26,7 @@ IConfiguration config = new ConfigurationBuilder()
 builder.Services.Configure<AppSettings>(config);
 builder.Services.Configure<ChromeSettings>(config);
 builder.Services.AddScoped<IGoogleFlight, GoogleFlightService>();
+builder.Services.AddScoped<ICsvService, CsvService>();
 builder.Services.Configure<GoogleFlightSettings>(config);
 
 DateTime outbound = DateTime.Parse(config.GetSection("FirstDepartureDate").Value!);
@@ -35,6 +36,7 @@ int flexDays = config.GetValue<int>("FlexDays");
 bool onlyWeekend = config.GetValue<bool>("OnlyWeekend");
 List<string> fromAirports = config.GetSection("FromAirports").Get<List<string>>()!;
 List<string> toAirports = config.GetSection("ToAirports").Get<List<string>>()!;
+
 if (howManyDays <= 0 || flexDays < 0)
 {
     throw new Exception("Please check for valid range input in appSettings.json (HowManyDays, FlexDays)");
@@ -54,7 +56,6 @@ if (outbound < DateTime.Now.Date || lastDate <= DateTime.Now.Date || outbound ==
 //}
 
 var host = builder.Build();
-var csvFileName = DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
 
 using (var scope = host.Services.CreateScope())
 {
@@ -62,6 +63,8 @@ using (var scope = host.Services.CreateScope())
     try
     {
         var scraper = services.GetRequiredService<IGoogleFlight>();
+
+        var csvFileName = DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
 
         scraper.InitScraper(outbound, lastDate, howManyDays, flexDays, onlyWeekend, fromAirports, toAirports, csvFileName);
 

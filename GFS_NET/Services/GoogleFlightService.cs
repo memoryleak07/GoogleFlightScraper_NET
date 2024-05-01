@@ -5,8 +5,9 @@ using Microsoft.Extensions.Options;
 
 namespace GFS_NET.Services
 {
-    public class GoogleFlightService(IScraper scraper, IOptions<GoogleFlightSettings> googleOpt, ILogger logger) : IGoogleFlight
+    public class GoogleFlightService(IScraper scraper, IOptions<GoogleFlightSettings> googleOpt, ILogger logger, ICsvService csvService) : IGoogleFlight
     {
+        private readonly ICsvService _csvService = csvService;
         private readonly ILogger _logger = logger;
         private readonly IScraper _scraper = scraper;
         private readonly string _baseURL = googleOpt.Value.BaseUrl;
@@ -23,10 +24,19 @@ namespace GFS_NET.Services
             DateTime startTime = DateTime.Now;
             _logger.Information($"Loop start at {startTime}");
 
-            StartScraperLoop(outbound, lastdate, howManyDays, flexDays, onlyWeekend,fromAirports, toAirports, csvFileName);
+            int totCount = StartScraperLoop(outbound, lastdate, howManyDays, flexDays, onlyWeekend,fromAirports, toAirports, csvFileName);
 
             DateTime endTime = DateTime.Now;
-            _logger.Information($"Loop end at {endTime}. Time elapsed: {endTime - startTime}");
+            _logger.Information($"Loop end at {endTime}.");
+            _logger.Information($"Total time elapsed: {endTime - startTime}");
+            _logger.Information($"Total search count: {totCount}");
+
+            //if (totCount > 0)
+            //{
+            //    string csvSorted = _csvService.SortCSVFile(csvFileName);
+            //    _logger.Information($"Result file raw: {csvFileName}.");
+            //    _logger.Information($"Result file sorted by price: {csvSorted}.");
+            //}
         }
 
 
@@ -52,22 +62,19 @@ namespace GFS_NET.Services
                 return false;
             }
 
-            results.InsertRange(0, [outboundDateStr, inboundDateStr]);
-
-            string line = string.Join(",", results);
-
-            File.AppendAllText(csvFileName, line + Environment.NewLine);
+            _csvService.AppendToCsvFile(results, outboundDateStr, inboundDateStr, csvFileName);
 
             _logger.Information("Result: " + string.Join(" | ", results));
 
             return true;
         }
 
-        private void StartScraperLoop(
+        private int StartScraperLoop(
             DateTime outbound, DateTime lastdate, int howManyDays, int flexDays, bool onlyWeekend, List<string> fromAirports, List<string> toAirports, string csvFileName)
         {
             TimeSpan period = lastdate - outbound;
 
+            int totCount = 0;
             int iWeekend = 0;
             int consecutiveFailures = 0;
 
@@ -102,6 +109,7 @@ namespace GFS_NET.Services
 
                         bool res = ScrapeAndSaveInfo(fromAirport, toAirport, newOutbound, newInbound, csvFileName);
                         consecutiveFailures = res == true ? 0 : ++consecutiveFailures;
+                        totCount++;
 
                         if (flexDays > 0)
                         {
@@ -110,6 +118,7 @@ namespace GFS_NET.Services
                                 newInbound = newOutbound.AddDays(j + 1 + howManyDays);
                                 bool flexRes = ScrapeAndSaveInfo(fromAirport, toAirport, newOutbound, newInbound, csvFileName);
                                 consecutiveFailures = flexRes == true ? 0 : ++consecutiveFailures;
+                                totCount++;
                             }
                         }
                     }
@@ -118,6 +127,7 @@ namespace GFS_NET.Services
                 }
             }
 
+            return totCount;
         }
     }
 }

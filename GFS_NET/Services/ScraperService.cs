@@ -9,7 +9,6 @@ namespace GFS_NET.Services
 {
     public class ScraperService : IScraper
     {
-        Random _rnd = new();
         private readonly ILogger _logger;
         private readonly IWebDriver _driver;
         private readonly ChromeSettings _chrOpt;
@@ -28,11 +27,11 @@ namespace GFS_NET.Services
             }
             if (_chrOpt.RandomizeUserAgent)
             {
-                options.AddArgument($"--user-agent={_chrOpt.UserAgents[_rnd.Next(0, _chrOpt.UserAgents.Count)]}");
+                options.AddArgument($"--user-agent={_chrOpt.UserAgents[new Random().Next(0, _chrOpt.UserAgents.Count)]}");
             }
             if (_chrOpt.RandomizeReferer)
             {
-                options.AddArgument($"--referer={_chrOpt.Referers[_rnd.Next(0, _chrOpt.Referers.Count)]}");
+                options.AddArgument($"--referer={_chrOpt.Referers[new Random().Next(0, _chrOpt.Referers.Count)]}");
             }
 
             _driver = new ChromeDriver(options);                                     // Windows
