@@ -37,15 +37,18 @@ bool onlyWeekend = config.GetValue<bool>("OnlyWeekend");
 List<string> fromAirports = config.GetSection("FromAirports").Get<List<string>>()!;
 List<string> toAirports = config.GetSection("ToAirports").Get<List<string>>()!;
 
-if (howManyDays <= 0 || flexDays < 0)
+if (howManyDays <= 0)
 {
-    throw new Exception("Please check for valid range input in appSettings.json (HowManyDays, FlexDays)");
+    throw new Exception("Please check for valid range input in appSettings.json (HowManyDays)");
 }
-if (outbound < DateTime.Now.Date || lastDate <= DateTime.Now.Date || outbound == lastDate)
+if (lastDate <= DateTime.Now.Date || outbound == lastDate)
 {
     throw new Exception("Please check for valid date input in appSettings.json (FirstDepartureDate, LastDepartureDate)");
 }
-
+if (outbound <= DateTime.Now.Date)
+{
+    outbound = DateTime.Now.AddDays(1);
+}
 //Console.WriteLine(Environment.NewLine + "AVOLOAVOLO.it TRIBUTE" + Environment.NewLine);
 //Console.WriteLine("Configure scraper parameters in 'appSettings.json' file." + Environment.NewLine);
 //Console.WriteLine("Do you want to continue? (Any key to continue, 'n' to exit)" + Environment.NewLine);
@@ -64,7 +67,7 @@ using (var scope = host.Services.CreateScope())
     {
         var scraper = services.GetRequiredService<IGoogleFlight>();
 
-        var csvFileName = DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
+        var csvFileName = DateTime.Now.ToString("RESULTS_yyyyMMddHHmmss") + ".csv";
 
         scraper.InitScraper(outbound, lastDate, howManyDays, flexDays, onlyWeekend, fromAirports, toAirports, csvFileName);
 

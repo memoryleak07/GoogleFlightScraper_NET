@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "GFS_NET": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
