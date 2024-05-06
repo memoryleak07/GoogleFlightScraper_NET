@@ -50,7 +50,7 @@ namespace GFS_NET.Services
             }
         }
 
-        public void AppendToCsvFile(List<string> results, string outboundDateStr, string inboundDateStr, string csvFileName)
+        public bool AppendToCsvFile(List<string> results, string outboundDateStr, string inboundDateStr, string csvFileName)
         {
 
             var formattedList = results
@@ -62,6 +62,8 @@ namespace GFS_NET.Services
             string line = string.Join(",", formattedList);
 
             File.AppendAllText(csvFileName, line + Environment.NewLine);
+
+            return true;
         }
     }
 }

@@ -66,9 +66,7 @@ using (var scope = host.Services.CreateScope())
     var scraper = services.GetRequiredService<IGoogleFlight>();
     try
     {
-        var csvFileName = DateTime.Now.ToString("RESULTS_yyyyMMddHHmmss") + ".csv";
-
-        scraper.InitScraper(outbound, lastDate, howManyDays, flexDays, onlyWeekend, fromAirports, toAirports, csvFileName);
+        scraper.InitScraper(outbound, lastDate, howManyDays, flexDays, onlyWeekend, fromAirports, toAirports);
 
         scraper.StopScraper();
     }

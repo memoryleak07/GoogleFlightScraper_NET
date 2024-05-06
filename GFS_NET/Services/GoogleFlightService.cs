@@ -19,9 +19,10 @@ namespace GFS_NET.Services
         }
 
         public void InitScraper(
-            DateTime outbound, DateTime lastdate, int howManyDays, int flexDays, bool onlyWeekend, List<string> fromAirports, List<string> toAirports, string csvFileName)
+            DateTime outbound, DateTime lastdate, int howManyDays, int flexDays, bool onlyWeekend, List<string> fromAirports, List<string> toAirports)
         {
             DateTime startTime = DateTime.Now;
+            string csvFileName = $"{startTime.ToLongTimeString()}.csv";
             _logger.Information($"Loop start at {startTime}");
 
             int totCount = StartScraperLoop(outbound, lastdate, howManyDays, flexDays, onlyWeekend,fromAirports, toAirports, csvFileName);
@@ -65,11 +66,9 @@ namespace GFS_NET.Services
                 return false;
             }
 
-            _csvService.AppendToCsvFile(results, outboundDateStr, inboundDateStr, csvFileName);
-
             _logger.Information("Result: " + string.Join(" | ", results));
 
-            return true;
+            return _csvService.AppendToCsvFile(results, outboundDateStr, inboundDateStr, csvFileName);
         }
 
         private int StartScraperLoop(
