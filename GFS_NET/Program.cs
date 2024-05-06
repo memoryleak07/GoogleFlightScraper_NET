@@ -63,18 +63,24 @@ var host = builder.Build();
 using (var scope = host.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var scraper = services.GetRequiredService<IGoogleFlight>();
     try
     {
-        var scraper = services.GetRequiredService<IGoogleFlight>();
-
         var csvFileName = DateTime.Now.ToString("RESULTS_yyyyMMddHHmmss") + ".csv";
 
         scraper.InitScraper(outbound, lastDate, howManyDays, flexDays, onlyWeekend, fromAirports, toAirports, csvFileName);
 
         scraper.StopScraper();
     }
-    catch (Exception ex) { throw new Exception(ex.Message); }
+    catch (Exception ex) 
+    {
+        scraper.StopScraper();
+        throw new Exception(ex.Message, ex); 
+    }
 
-    finally { scope.Dispose(); }
+    finally 
+    { 
+        scope.Dispose(); 
+    }
 }
 

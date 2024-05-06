@@ -33,10 +33,10 @@ namespace GFS_NET.Services
 
             if (totCount > 0)
             {
-                string csvSorted = _csvService.SortCSVFile(csvFileName);
+                var (totRowCount, csvSorted) = _csvService.SortCSVFile(csvFileName);
                 _logger.Information($"Result file raw: {csvFileName}.");
                 _logger.Information($"Result file sorted by price: {csvSorted}.");
-                _logger.Information($"Result file total row count: {_csvService.GetCsvFileRowCount(csvSorted)}.");
+                _logger.Information($"Result file total row count: {totRowCount}.");
             }
 
             _logger.Information($"Goodbye, hope it helps.");

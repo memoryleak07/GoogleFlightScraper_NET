@@ -10,7 +10,7 @@ namespace GFS_NET.Services
     public class ScraperService : IScraper
     {
         private readonly ILogger _logger;
-        private readonly IWebDriver _driver;
+        private readonly ChromeDriver _driver;
         private readonly ChromeSettings _chrOpt;
         private readonly WebDriverWait _waitTime;
 
