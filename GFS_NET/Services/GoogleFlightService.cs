@@ -28,7 +28,7 @@ namespace GFS_NET.Services
 
             DateTime endTime = DateTime.Now;
             _logger.Information($"Loop end at {endTime}.");
-            _logger.Information($"Total time elapsed: {endTime - startTime}");
+            _logger.Information($"Total time elapsed: {(endTime - startTime).TotalHours} (hours)");
             _logger.Information($"Total search count: {totCount}");
 
             if (totCount > 0)
@@ -36,6 +36,7 @@ namespace GFS_NET.Services
                 string csvSorted = _csvService.SortCSVFile(csvFileName);
                 _logger.Information($"Result file raw: {csvFileName}.");
                 _logger.Information($"Result file sorted by price: {csvSorted}.");
+                _logger.Information($"Result file total row count: {_csvService.GetCsvFileRowCount(csvSorted)}.");
             }
 
             _logger.Information($"Goodbye, hope it helps.");

@@ -10,21 +10,37 @@ namespace GFS_NET.Services
     {
         private readonly ILogger _logger;
         private readonly IOptions<GoogleFlightSettings> _googleOpt;
+        private DataFrame _dataFrame;
 
-        public CsvService(ILogger logger, IOptions<GoogleFlightSettings> googleOpt)
+        public CsvService(ILogger logger, IOptions<GoogleFlightSettings> googleOpt, DataFrame dataFrame)
         {
             _logger = logger;
             _googleOpt = googleOpt;
+            _dataFrame = dataFrame;
+        }
+
+        public void OpenCsvFile(string csvFileName)
+        {
+            try
+            {
+                var dataPath = Path.GetFullPath(csvFileName);
+                _dataFrame = DataFrame.LoadCsv(filename: dataPath, cultureInfo: CultureInfo.InvariantCulture);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public int GetCsvFileRowCount(string csvFileName)
+        {
+            OpenCsvFile(csvFileName);
+            return _dataFrame.Rows.Count();
         }
 
         public string SortCSVFile(string csvFileName)
         {
-            // Define data path
-            var dataPath = Path.GetFullPath(@"test.csv");
-
-            // Load the data into the data frame
-            var dataFrame = DataFrame.LoadCsv(filename: dataPath, cultureInfo: CultureInfo.InvariantCulture);
-
+            OpenCsvFile(csvFileName);
             // List of column names
             var columns = _googleOpt.Value.Xpaths.ToDictionary().Keys.ToList();
 
@@ -33,16 +49,16 @@ namespace GFS_NET.Services
             // Assign column names to the DataFrame
             for (int i = 0; i < columns.Count; i++)
             {
-                dataFrame.Columns[i].SetName(columns[i]);
+                _dataFrame.Columns[i].SetName(columns[i]);
             }
 
             // Order by Price
-            dataFrame = dataFrame.OrderBy("Price"); //TODO: for some reason it is added time to date strings. Why? Who asks?
+            _dataFrame = _dataFrame.OrderBy("Price"); //TODO: for some reason it is added time to date strings. Why? Who asks?
 
             // Save the new data frame to a CSV file
             var newFilePath = Path.GetFullPath(@"sorted_"+csvFileName);
 
-            DataFrame.SaveCsv(dataFrame, newFilePath, ',');
+            DataFrame.SaveCsv(_dataFrame, newFilePath, ',');
 
             _logger.Debug($"CSV file sorted successfully: {newFilePath}");
 
